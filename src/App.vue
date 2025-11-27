@@ -1,46 +1,32 @@
 <script lang="ts" setup>
 import type { CSSProperties } from 'vue';
 import HeaderCom from './components/HeaderCom.vue';
-const headerStyle: CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  height: 64,
-  paddingInline: 50,
-  lineHeight: '64px',
-  backgroundColor: '#7dbcea',
-};
+import SiderMenu from './components/SiderMenu.vue';
+import { RouterView } from 'vue-router';
 
-const contentStyle: CSSProperties = {
-  textAlign: 'center',
-  minHeight: 120,
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#108ee9',
-};
-
-const siderStyle: CSSProperties = {
-  textAlign: 'center',
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#3ba0e9',
-};
-
-const footerStyle: CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  backgroundColor: '#7dbcea',
-};
 </script>
 
 <template>
   <a-layout style="min-height: 100vh">
-    <a-layout-header :style="headerStyle"><HeaderCom /></a-layout-header>
+    <a-layout-header class="header bg-dark-800 text-white h-52px flex items-center">
+      <HeaderCom />
+    </a-layout-header>
     <a-layout>
-      <a-layout-sider :style="siderStyle">Sider</a-layout-sider>
-      <a-layout-content :style="contentStyle">Content</a-layout-content>
+      <a-layout-sider width="200" class="bg-gray-100">
+        <SiderMenu />
+      </a-layout-sider>
+      <a-layout-content class="p-4">
+        <RouterView />
+      </a-layout-content>
     </a-layout>
-    <!-- <a-layout-footer :style="footerStyle">Footer</a-layout-footer> -->
   </a-layout>
 </template>
 
-<style scoped></style>
+<style scoped>
+.header {
+  height: 52px;
+  background-color: #131435;
+  color: #fff;
+  line-height: 52px;
+}
+</style>
