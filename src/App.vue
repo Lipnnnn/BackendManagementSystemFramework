@@ -15,7 +15,7 @@ import { RouterView } from 'vue-router';
       <a-layout-sider width="200" class="bg-gray-100">
         <SiderMenu />
       </a-layout-sider>
-      <a-layout-content class="p-4">
+      <a-layout-content>
         <RouterView />
       </a-layout-content>
     </a-layout>

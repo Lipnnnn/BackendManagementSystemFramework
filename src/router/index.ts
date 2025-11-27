@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import VideoView from '../views/VideoView.vue'
 import UploadView from '../views/UploadView.vue'
@@ -9,10 +8,10 @@ import SettingsView from '../views/SettingsView.vue'
 export const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView,
+    name: 'organizationalStructureInformation',
+    component: () => import('@/views/organizationalStructureInformation/index.vue'),
     meta: {
-      title: '用户管理',
+      title: '组织机构信息',
       icon: 'UserOutlined',
       hidden: false
     }
