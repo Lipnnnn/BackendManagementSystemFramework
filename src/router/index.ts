@@ -27,11 +27,11 @@ export const routes = [
     }
   },
   {
-    path: '/upload',
-    name: 'upload',
-    component: UploadView,
+    path: '/hardwareDeviceInformation',
+    name: 'hardwareDeviceInformation',
+    component: () => import('@/views/hardwareDeviceInformation/index.vue'),
     meta: {
-      title: '文件上传',
+      title: '硬件设备信息',
       icon: 'UploadOutlined',
       hidden: false
     }
