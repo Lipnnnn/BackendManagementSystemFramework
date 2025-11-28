@@ -22,6 +22,9 @@
       <a-table :columns="columns" :data-source="displayData" :row-selection="rowSelection" :pagination="pagination"
         :scroll="{ x: 1200 }" @change="handleTableChange">
         <template #bodyCell="{ column, record, index }">
+          <template v-if="column.key === 'unitType'">
+            {{ Array.isArray(record.unitType) ? record.unitType.join(' / ') : (record.unitType || '-') }}
+          </template>
           <template v-if="column.key === 'action'">
             <a-space>
               <a-button type="link" @click="handleView(record)">查看</a-button>
@@ -60,7 +63,7 @@ interface OrganizationItem {
   key: string
   unitName: string
   region: string
-  unitType: string
+  unitType: string | string[]
   industry: string
   // 完整表单数据，用于编辑回显
   creditCode?: string
@@ -146,7 +149,7 @@ const allData = ref<OrganizationItem[]>([])
 const pagination = reactive({
   current: 1,
   pageSize: 10,
-  total: 14,
+  total: 0,
   showSizeChanger: true,
   showTotal: (total: number) => `共 ${total} 条`,
   pageSizeOptions: ['10', '20', '50', '100'],
@@ -202,34 +205,36 @@ const handleExport = () => {
   }
 
   // 准备导出数据
-  const exportData = allData.value.map(item => ({
-    '单位名称': item.unitName || '',
-    '所属地区': item.region || '',
-    '单位类型': item.unitType || '',
-    '所属行业': item.industry || '',
-    '统一社会信用代码': item.creditCode || '',
-    '所在国家地区': item.country || '',
-    '单位具体地址': item.address || '',
-    '经度': item.longitude || '',
-    '纬度': item.latitude || '',
-    '网络监管部门名称': item.networkDept || '',
-    '行政主管部门名称': item.adminDept || '',
-    '是否有本地大型平台': item.hasLocalPlatform || '',
-    '是否有本地态势感知平台': item.hasSituationPlatform || '',
-    '是否有外电子大屏': item.hasExternalScreen || '',
-    '单位负责人': item.unitHead || '',
-    '单位负责人办公电话': item.unitHeadPhone || '',
-    '单位负责人联系邮箱': item.unitHeadEmail || '',
-    '应急联系人': item.emergencyContact || '',
-    '应急联系人办公电话': item.emergencyPhone || '',
-    '应急联系人联系邮箱': item.emergencyEmail || '',
-    '应急联系人职务职称': item.emergencyPosition || '',
-    '应急联系人详细地址': item.emergencyAddress || '',
-    '网络安全分管领导': item.securityLeader || '',
-    '网络安全分管领导办公电话': item.securityLeaderPhone || '',
-    '网络安全分管领导联系邮箱': item.securityLeaderEmail || '',
-    '网络安全分管领导职务职称': item.securityLeaderPosition || ''
-  }))
+  const exportData = allData.value.map(item => {
+    return {
+      '单位名称': item.unitName || '-',
+      '所属地区': (item.region && item.region !== '-') ? item.region : '-',
+      '单位类型': Array.isArray(item.unitType) ? item.unitType.join(' / ') : ((item.unitType && item.unitType !== '-') ? item.unitType : '-'),
+      '所属行业': (item.industry && item.industry !== '-') ? item.industry : '-',
+      '统一社会信用代码': item.creditCode || '-',
+      '所在国家地区': item.country || '-',
+      '单位具体地址': item.address || '-',
+      '经度': item.longitude || '-',
+      '纬度': item.latitude || '-',
+      '网络监管部门名称': item.networkDept || '-',
+      '行政主管部门名称': item.adminDept || '-',
+      '是否有本地大型平台': item.hasLocalPlatform || '-',
+      '是否有本地态势感知平台': item.hasSituationPlatform || '-',
+      '是否有外电子大屏': item.hasExternalScreen || '-',
+      '单位负责人': item.unitHead || '-',
+      '单位负责人办公电话': item.unitHeadPhone || '-',
+      '单位负责人联系邮箱': item.unitHeadEmail || '-',
+      '应急联系人': item.emergencyContact || '-',
+      '应急联系人办公电话': item.emergencyPhone || '-',
+      '应急联系人联系邮箱': item.emergencyEmail || '-',
+      '应急联系人职务职称': item.emergencyPosition || '-',
+      '应急联系人详细地址': item.emergencyAddress || '-',
+      '网络安全分管领导': item.securityLeader || '-',
+      '网络安全分管领导办公电话': item.securityLeaderPhone || '-',
+      '网络安全分管领导联系邮箱': item.securityLeaderEmail || '-',
+      '网络安全分管领导职务职称': item.securityLeaderPosition || '-'
+    }
+  })
 
   // 创建工作簿
   const ws = XLSX.utils.json_to_sheet(exportData)
@@ -293,9 +298,15 @@ const handleEdit = (record: OrganizationItem) => {
     regionArray = record.region.split(' / ')
   }
 
+  // 将字符串类型的 unitType 转换为数组（供级联选择器使用）
+  let unitTypeArray: string[] | undefined = undefined
+  if (record.unitType && record.unitType !== '-') {
+    unitTypeArray = Array.isArray(record.unitType) ? record.unitType : record.unitType.split(' / ')
+  }
+
   editData.value = {
     unitName: record.unitName,
-    unitType: record.unitType === '-' ? undefined : record.unitType,
+    unitType: unitTypeArray,
     region: regionArray,
     industry: record.industry === '-' ? undefined : record.industry,
     creditCode: record.creditCode || '',
@@ -343,6 +354,8 @@ const handleTableChange: TableProps['onChange'] = (pag) => {
 const handleModalOk = (data: any) => {
   // 处理区域数据：将数组转换为字符串
   const regionStr = Array.isArray(data.region) ? data.region.join(' / ') : (data.region || '-')
+  // 处理单位类型数据：将数组转换为字符串
+  const unitTypeStr = Array.isArray(data.unitType) ? data.unitType.join(' / ') : (data.unitType || '-')
 
   if (editData.value?.key) {
     // 编辑
@@ -352,7 +365,7 @@ const handleModalOk = (data: any) => {
         key: editData.value.key,
         unitName: data.unitName,
         region: regionStr,
-        unitType: data.unitType || '-',
+        unitType: unitTypeStr,
         industry: data.industry || '-',
         // 保存完整表单数据
         creditCode: data.creditCode,
@@ -386,7 +399,7 @@ const handleModalOk = (data: any) => {
       key: Date.now().toString(),
       unitName: data.unitName,
       region: regionStr,
-      unitType: data.unitType || '-',
+      unitType: unitTypeStr,
       industry: data.industry || '-',
       // 保存完整表单数据
       creditCode: data.creditCode,

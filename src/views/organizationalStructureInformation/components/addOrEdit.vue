@@ -12,11 +12,8 @@
         </a-col>
         <a-col :span="12">
           <a-form-item label="单位类型" name="unitType">
-            <a-select v-model:value="formData.unitType" placeholder="请选择单位类型">
-              <a-select-option v-for="item in unitTypeOptions" :key="item" :value="item">
-                {{ item }}
-              </a-select-option>
-            </a-select>
+            <a-cascader v-model:value="formData.unitType" :options="unitTypeOptions" placeholder="请选择单位类型"
+              :show-search="{ filter }" change-on-select />
           </a-form-item>
         </a-col>
       </a-row>
@@ -209,7 +206,7 @@ import { _areaData } from '@/data/areaData'
 
 interface FormData {
   unitName: string
-  unitType?: string
+  unitType?: string[]
   region?: string[]
   industry?: string
   creditCode: string
@@ -281,7 +278,55 @@ const industryOptions = [
   { label: '交通', value: '交通' },
   { label: '质量监督检验检疫', value: '质量监督检验检疫' }
 ]
-const unitTypeOptions = ['事业单位', '企业', '政府部门', '社会团体']
+const unitTypeOptions = [
+  {
+    value: '企业',
+    label: '企业',
+    children: [
+      { value: '公司', label: '公司' },
+      { value: '非公司制企业法人', label: '非公司制企业法人' },
+      { value: '企业分支机构', label: '企业分支机构' },
+      { value: '个人独资企业、合伙企业', label: '个人独资企业、合伙企业' },
+      { value: '其他企业', label: '其他企业' }
+    ]
+  },
+  {
+    value: '机关',
+    label: '机关',
+    children: [
+      { value: '中国共产党', label: '中国共产党' },
+      { value: '国家权力机关法人', label: '国家权力机关法人' },
+      { value: '国家行政机关法人', label: '国家行政机关法人' },
+      { value: '国家司法机关法人', label: '国家司法机关法人' },
+      { value: '政协组织', label: '政协组织' },
+      { value: '民主党派', label: '民主党派' },
+      { value: '人民解放军、武警部队', label: '人民解放军、武警部队' },
+      { value: '其他机关', label: '其他机关' }
+    ]
+  },
+  {
+    value: '社会团体',
+    label: '社会团体',
+    children: [
+      { value: '社会团体法人', label: '社会团体法人' },
+      { value: '社会团体分支、代表机构', label: '社会团体分支、代表机构' },
+      { value: '其他社会团体', label: '其他社会团体' }
+    ]
+  },
+  {
+    value: '其他组织机构',
+    label: '其他组织机构',
+    children: [
+      { value: '民办非企业单位', label: '民办非企业单位' },
+      { value: '基金会', label: '基金会' },
+      { value: '宗教活动场所', label: '宗教活动场所' },
+      { value: '农村村民委员会', label: '农村村民委员会' },
+      { value: '城市居民委员会', label: '城市居民委员会' },
+      { value: '自定义区', label: '自定义区' },
+      { value: '其他组织机构', label: '其他组织机构' }
+    ]
+  }
+]
 
 // 级联选择器搜索过滤
 const filter = (inputValue: string, path: any[]) => {

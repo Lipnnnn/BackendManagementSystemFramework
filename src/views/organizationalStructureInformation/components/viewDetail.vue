@@ -11,7 +11,7 @@
         </a-col>
         <a-col :span="12">
           <a-form-item label="单位类型">
-            <span class="detail-text">{{ detailData.unitType || '-' }}</span>
+            <span class="detail-text">{{ formatUnitType(detailData.unitType) }}</span>
           </a-form-item>
         </a-col>
       </a-row>
@@ -188,7 +188,7 @@ import { ref, watch, reactive } from 'vue'
 
 interface DetailData {
   unitName?: string
-  unitType?: string
+  unitType?: string | string[]
   region?: string
   industry?: string
   creditCode?: string
@@ -248,6 +248,15 @@ watch(() => props.open, (newVal) => {
 watch(visible, (newVal) => {
   emit('update:open', newVal)
 })
+
+// 格式化单位类型显示
+const formatUnitType = (unitType?: string | string[]) => {
+  if (!unitType) return '-'
+  if (Array.isArray(unitType)) {
+    return unitType.join(' / ')
+  }
+  return unitType
+}
 
 // 取消
 const handleCancel = () => {

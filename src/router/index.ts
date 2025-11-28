@@ -17,11 +17,11 @@ export const routes = [
     }
   },
   {
-    path: '/video',
-    name: 'video',
-    component: VideoView,
+    path: '/businessInformationSystem',
+    name: 'businessInformationSystem',
+    component: () => import('@/views/businessInformationSystem/index.vue'),
     meta: {
-      title: '视频管理',
+      title: '业务信息系统',
       icon: 'VideoCameraOutlined',
       hidden: false
     }
