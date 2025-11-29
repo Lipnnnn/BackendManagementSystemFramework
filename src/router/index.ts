@@ -22,7 +22,7 @@ export const routes = [
     component: () => import('@/views/businessInformationSystem/index.vue'),
     meta: {
       title: '业务信息系统',
-      icon: 'VideoCameraOutlined',
+      icon: 'MessageOutlined',
       hidden: false
     }
   },
@@ -32,7 +32,7 @@ export const routes = [
     component: () => import('@/views/hardwareDeviceInformation/index.vue'),
     meta: {
       title: '硬件设备信息',
-      icon: 'UploadOutlined',
+      icon: 'CreditCardOutlined',
       hidden: false
     }
   },
@@ -42,7 +42,7 @@ export const routes = [
     component: () => import('@/views/softwareInformation/index.vue'),
     meta: {
       title: '软件信息',
-      icon: 'SettingOutlined',
+      icon: 'LaptopOutlined',
       hidden: false
     }
   },
@@ -52,7 +52,7 @@ export const routes = [
     component: () => import('@/views/networkInformation/index.vue'),
     meta: {
       title: '网络信息',
-      icon: 'UserOutlined',
+      icon: 'CloudUploadOutlined',
       hidden: false
     }
   },
@@ -62,7 +62,7 @@ export const routes = [
     component: () => import('@/views/dataCenterInformation/index.vue'),
     meta: {
       title: '机房信息',
-      icon: 'UserOutlined',
+      icon: 'LockOutlined',
       hidden: false
     }
   },
@@ -72,7 +72,17 @@ export const routes = [
     component: () => import('@/views/emergencyResourceInformation/index.vue'),
     meta: {
       title: '应急资源信息',
-      icon: 'UserOutlined',
+      icon: 'SolutionOutlined',
+      hidden: false
+    }
+  },
+  {
+    path: '/businessDataInformation',
+    name: 'businessDataInformation',
+    component: () => import('@/views/businessDataInformation/index.vue'),
+    meta: {
+      title: '业务数据信息',
+      icon: 'LineChartOutlined',
       hidden: false
     }
   },
