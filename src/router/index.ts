@@ -47,13 +47,13 @@ export const routes = [
     }
   },
   {
-    path: '/about',
-    name: 'about',
-    component: AboutView,
+    path: '/networkInformation',
+    name: 'networkInformation',
+    component: () => import('@/views/networkInformation/index.vue'),
     meta: {
-      title: '关于',
+      title: '网络信息',
       icon: 'UserOutlined',
-      hidden: true // 在菜单中隐藏
+      hidden: false
     }
   }
 ]

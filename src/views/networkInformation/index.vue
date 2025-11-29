@@ -22,9 +22,8 @@
       <a-table :columns="columns" :data-source="displayData" :row-selection="rowSelection" :pagination="pagination"
         :scroll="{ x: 1200 }" @change="handleTableChange">
         <template #bodyCell="{ column, record, index }">
-          <template v-if="column.key === 'softwareCategory'">
-            {{ Array.isArray(record.softwareCategory) ? record.softwareCategory.join(' / ') : (record.softwareCategory
-              || '-') }}
+          <template v-if="column.key === 'region'">
+            {{ Array.isArray(record.region) ? record.region.join(' / ') : (record.region || '-') }}
           </template>
           <template v-if="column.key === 'action'">
             <a-space>
@@ -60,51 +59,61 @@ import AddOrEdit from './components/addOrEdit.vue'
 import ViewDetail from './components/viewDetail.vue'
 
 // 数据类型定义
-interface IpPortItem {
-  ip: string
-  port: string
+interface IpRangeItem {
+  ipVersion: string
+  startIp: string
+  endIp: string
 }
 
-interface SoftwareItem {
+interface NetworkItem {
   key: string
-  softwareName: string
-  softwareCategory: string | string[]
+  networkName: string
+  region: string | string[]
   affiliatedUnit: string
-  isDomestic: string
+  accessMachineRoom: string
+  networkProvider: string
   // 完整表单数据，用于编辑回显
-  softwareManufacturer?: string
-  softwareVersion?: string
-  affiliatedDevice?: string
-  isConnectedInternet?: string
-  softwareStandardName?: string
-  systemIpPortList?: IpPortItem[]
+  networkUsage?: string
+  networkResourceType?: string
+  networkBandwidth?: string
+  accessIpRangeList?: IpRangeItem[]
+  detailedAddress?: string
+  providerContact?: string
+  contactPhone?: string
+  contactEmail?: string
 }
 
 // 表格列定义
 const columns: TableColumnsType = [
   {
-    title: '软件名称',
-    dataIndex: 'softwareName',
-    key: 'softwareName',
+    title: '网络名称',
+    dataIndex: 'networkName',
+    key: 'networkName',
     width: 200
   },
   {
-    title: '软件分类',
-    dataIndex: 'softwareCategory',
-    key: 'softwareCategory',
-    width: 300
-  },
-  {
-    title: '所属设备',
-    dataIndex: 'affiliatedDevice',
-    key: 'affiliatedDevice',
-    width: 300
+    title: '所属地区',
+    dataIndex: 'region',
+    key: 'region',
+    width: 200
   },
   {
     title: '所属单位',
     dataIndex: 'affiliatedUnit',
     key: 'affiliatedUnit',
-    width: 300
+    width: 200
+  },
+  {
+    title: '接入机房',
+    dataIndex: 'accessMachineRoom',
+    key: 'accessMachineRoom',
+    width: 200
+  },
+  {
+    title: '网络运营商',
+    dataIndex: 'networkProvider',
+    key: 'networkProvider',
+    width: 150
   },
   {
     title: '操作',
@@ -115,7 +124,7 @@ const columns: TableColumnsType = [
 ]
 
 // 模拟数据
-const allData = ref<SoftwareItem[]>([])
+const allData = ref<NetworkItem[]>([])
 
 // 分页配置
 const pagination = reactive({
@@ -179,28 +188,31 @@ const handleExport = () => {
   // 准备导出数据（字段顺序与新增页面一致）
   const exportData = allData.value.map(item => {
     return {
-      '软件名称': item.softwareName || '-',
-      '软件生产厂商': item.softwareManufacturer || '-',
-      '软件分类': Array.isArray(item.softwareCategory) ? item.softwareCategory.join(' / ') : (item.softwareCategory || '-'),
-      '软件版本': item.softwareVersion || '-',
+      '网络名称': item.networkName || '-',
+      '所属地区': Array.isArray(item.region) ? item.region.join(' / ') : (item.region || '-'),
+      '网络服务商': item.networkProvider || '-',
+      '网络用途': item.networkUsage || '-',
       '所属单位': item.affiliatedUnit || '-',
-      '是否国产化': item.isDomestic || '-',
-      '所属设备': item.affiliatedDevice || '-',
-      '是否连接互联网': item.isConnectedInternet || '-',
-      '软件标准化命名方法': item.softwareStandardName || '-',
-      '系统IP端口': item.systemIpPortList && item.systemIpPortList.length > 0
-        ? item.systemIpPortList.map(ip => `${ip.ip}${ip.port ? ':' + ip.port : ''}`).join(', ')
-        : '-'
+      '网络资源类型': item.networkResourceType || '-',
+      '网络带宽': item.networkBandwidth ? `${item.networkBandwidth}MB` : '-',
+      '接入机房': item.accessMachineRoom || '-',
+      '接入IP地址范围': item.accessIpRangeList && item.accessIpRangeList.length > 0
+        ? item.accessIpRangeList.map(ip => `${ip.ipVersion} ${ip.startIp}-${ip.endIp}`).join(', ')
+        : '-',
+      '详细地址': item.detailedAddress || '-',
+      '运营商联系人': item.providerContact || '-',
+      '联系电话': item.contactPhone || '-',
+      '联系邮箱': item.contactEmail || '-'
     }
   })
 
   // 创建工作簿
   const ws = XLSX.utils.json_to_sheet(exportData)
   const wb = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(wb, ws, '软件信息')
+  XLSX.utils.book_append_sheet(wb, ws, '网络信息')
 
   // 生成文件名（带时间戳）
-  const fileName = `软件信息_${new Date().getTime()}.xlsx`
+  const fileName = `网络信息_${new Date().getTime()}.xlsx`
 
   // 导出文件
   XLSX.writeFile(wb, fileName)
@@ -215,56 +227,62 @@ const handleAdd = () => {
 }
 
 // 查看
-const handleView = (record: SoftwareItem) => {
-  // 将字符串类型的 softwareCategory 转换为数组（供查看页面显示）
-  let categoryArray: string[] = []
-  if (record.softwareCategory && record.softwareCategory !== '-') {
-    categoryArray = Array.isArray(record.softwareCategory) ? record.softwareCategory : record.softwareCategory.split(' / ')
+const handleView = (record: NetworkItem) => {
+  // 将字符串类型的 region 转换为数组（供查看页面显示）
+  let regionArray: string[] = []
+  if (record.region && record.region !== '-') {
+    regionArray = Array.isArray(record.region) ? record.region : record.region.split(' / ')
   }
 
   viewData.value = {
-    softwareName: record.softwareName,
-    softwareManufacturer: record.softwareManufacturer,
-    softwareCategory: categoryArray,
-    softwareVersion: record.softwareVersion,
+    networkName: record.networkName,
+    region: regionArray,
+    networkProvider: record.networkProvider,
+    networkUsage: record.networkUsage,
     affiliatedUnit: record.affiliatedUnit,
-    isDomestic: record.isDomestic === '-' ? '' : record.isDomestic,
-    affiliatedDevice: record.affiliatedDevice,
-    isConnectedInternet: record.isConnectedInternet,
-    softwareStandardName: record.softwareStandardName,
-    systemIpPortList: record.systemIpPortList || []
+    networkResourceType: record.networkResourceType,
+    networkBandwidth: record.networkBandwidth,
+    accessMachineRoom: record.accessMachineRoom,
+    accessIpRangeList: record.accessIpRangeList || [{ ipVersion: 'IPv4', startIp: '', endIp: '' }],
+    detailedAddress: record.detailedAddress,
+    providerContact: record.providerContact,
+    contactPhone: record.contactPhone,
+    contactEmail: record.contactEmail
   }
   viewVisible.value = true
 }
 
 // 编辑
-const handleEdit = (record: SoftwareItem) => {
+const handleEdit = (record: NetworkItem) => {
   modalTitle.value = '编辑'
 
-  // 将字符串类型的 softwareCategory 转换为数组（供级联选择器使用）
-  let categoryArray: string[] | undefined = undefined
-  if (record.softwareCategory && record.softwareCategory !== '-') {
-    categoryArray = Array.isArray(record.softwareCategory) ? record.softwareCategory : record.softwareCategory.split(' / ')
+  // 将字符串类型的 region 转换为数组（供级联选择器使用）
+  let regionArray: string[] | undefined = undefined
+  if (record.region && record.region !== '-') {
+    regionArray = Array.isArray(record.region) ? record.region : record.region.split(' / ')
   }
 
   editData.value = {
-    softwareName: record.softwareName,
-    softwareManufacturer: record.softwareManufacturer || '',
-    softwareCategory: categoryArray,
-    softwareVersion: record.softwareVersion || '',
+    networkName: record.networkName,
+    region: regionArray,
+    networkProvider: record.networkProvider === '-' ? undefined : record.networkProvider,
+    networkUsage: record.networkUsage || '',
     affiliatedUnit: record.affiliatedUnit,
-    isDomestic: record.isDomestic === '-' ? undefined : record.isDomestic,
-    affiliatedDevice: record.affiliatedDevice || '',
-    isConnectedInternet: record.isConnectedInternet,
-    softwareStandardName: record.softwareStandardName || '',
-    systemIpPortList: record.systemIpPortList || [],
+    networkResourceType: record.networkResourceType === '-' ? undefined : record.networkResourceType,
+    networkBandwidth: record.networkBandwidth || '',
+    accessMachineRoom: record.accessMachineRoom || '',
+    accessIpRangeList: record.accessIpRangeList || [{ ipVersion: 'IPv4', startIp: '', endIp: '' }],
+    detailedAddress: record.detailedAddress || '',
+    providerContact: record.providerContact || '',
+    contactPhone: record.contactPhone || '',
+    contactEmail: record.contactEmail || '',
     key: record.key
   }
   modalVisible.value = true
 }
 
 // 删除单行
-const handleDeleteRow = (record: SoftwareItem) => {
+const handleDeleteRow = (record: NetworkItem) => {
   const newData = allData.value.filter(item => item.key !== record.key)
   allData.value = newData
   pagination.total = newData.length
@@ -279,8 +297,8 @@ const handleTableChange: TableProps['onChange'] = (pag) => {
 
 // 弹窗确定
 const handleModalOk = (data: any) => {
-  // 处理软件分类数据：将数组转换为字符串
-  const categoryStr = Array.isArray(data.softwareCategory) ? data.softwareCategory.join(' / ') : (data.softwareCategory || '-')
+  // 处理地区数据：将数组转换为字符串
+  const regionStr = Array.isArray(data.region) ? data.region.join(' / ') : (data.region || '-')
 
   if (editData.value?.key) {
     // 编辑
@@ -288,35 +306,41 @@ const handleModalOk = (data: any) => {
     if (index > -1 && allData.value[index]) {
       allData.value[index] = {
         key: editData.value.key,
-        softwareName: data.softwareName,
-        softwareCategory: categoryStr,
+        networkName: data.networkName,
+        region: regionStr,
         affiliatedUnit: data.affiliatedUnit,
-        isDomestic: data.isDomestic || '-',
+        accessMachineRoom: data.accessMachineRoom,
+        networkProvider: data.networkProvider || '-',
         // 保存完整表单数据
-        softwareManufacturer: data.softwareManufacturer,
-        softwareVersion: data.softwareVersion,
-        affiliatedDevice: data.affiliatedDevice,
-        isConnectedInternet: data.isConnectedInternet,
-        softwareStandardName: data.softwareStandardName,
-        systemIpPortList: data.systemIpPortList || []
+        networkUsage: data.networkUsage,
+        networkResourceType: data.networkResourceType,
+        networkBandwidth: data.networkBandwidth,
+        accessIpRangeList: data.accessIpRangeList || [{ ipVersion: 'IPv4', startIp: '', endIp: '' }],
+        detailedAddress: data.detailedAddress,
+        providerContact: data.providerContact,
+        contactPhone: data.contactPhone,
+        contactEmail: data.contactEmail
       }
     }
     message.success('编辑成功')
   } else {
     // 新增
-    const newItem: SoftwareItem = {
+    const newItem: NetworkItem = {
       key: Date.now().toString(),
-      softwareName: data.softwareName,
-      softwareCategory: categoryStr,
+      networkName: data.networkName,
+      region: regionStr,
       affiliatedUnit: data.affiliatedUnit,
-      isDomestic: data.isDomestic || '-',
+      accessMachineRoom: data.accessMachineRoom,
+      networkProvider: data.networkProvider || '-',
       // 保存完整表单数据
-      softwareManufacturer: data.softwareManufacturer,
-      softwareVersion: data.softwareVersion,
-      affiliatedDevice: data.affiliatedDevice,
-      isConnectedInternet: data.isConnectedInternet,
-      softwareStandardName: data.softwareStandardName,
-      systemIpPortList: data.systemIpPortList || []
+      networkUsage: data.networkUsage,
+      networkResourceType: data.networkResourceType,
+      networkBandwidth: data.networkBandwidth,
+      accessIpRangeList: data.accessIpRangeList || [{ ipVersion: 'IPv4', startIp: '', endIp: '' }],
+      detailedAddress: data.detailedAddress,
+      providerContact: data.providerContact,
+      contactPhone: data.contactPhone,
+      contactEmail: data.contactEmail
     }
     allData.value.push(newItem)
     message.success('新增成功')
