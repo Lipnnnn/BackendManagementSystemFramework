@@ -65,7 +65,17 @@ export const routes = [
       icon: 'UserOutlined',
       hidden: false
     }
-  }
+  },
+  {
+    path: '/emergencyResourceInformation',
+    name: 'emergencyResourceInformation',
+    component: () => import('@/views/emergencyResourceInformation/index.vue'),
+    meta: {
+      title: '应急资源信息',
+      icon: 'UserOutlined',
+      hidden: false
+    }
+  },
 ]
 
 const router = createRouter({
