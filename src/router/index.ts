@@ -37,11 +37,11 @@ export const routes = [
     }
   },
   {
-    path: '/settings',
-    name: 'settings',
-    component: SettingsView,
+    path: '/softwareInformation',
+    name: 'softwareInformation',
+    component: () => import('@/views/softwareInformation/index.vue'),
     meta: {
-      title: '系统设置',
+      title: '软件信息',
       icon: 'SettingOutlined',
       hidden: false
     }
