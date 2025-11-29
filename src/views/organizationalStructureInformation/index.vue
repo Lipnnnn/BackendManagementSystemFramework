@@ -21,7 +21,7 @@
     <div class="table-section">
       <a-table :columns="columns" :data-source="displayData" :row-selection="rowSelection" :pagination="pagination"
         :scroll="{ x: 1200 }" @change="handleTableChange">
-        <template #bodyCell="{ column, record, index }">
+        <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'unitType'">
             {{ Array.isArray(record.unitType) ? record.unitType.join(' / ') : (record.unitType || '-') }}
           </template>

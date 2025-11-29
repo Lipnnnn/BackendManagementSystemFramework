@@ -46,7 +46,7 @@
         <a-col :span="12">
           <a-form-item label="网络带宽">
             <span class="detail-text">{{ detailData.networkBandwidth ? detailData.networkBandwidth + ' MB' : '-'
-              }}</span>
+            }}</span>
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -60,7 +60,7 @@
         <a-col :span="24">
           <a-form-item label="接入IP地址范围" :label-col="{ span: 4 }" :wrapper-col="{ span: 19 }">
             <div
-              v-if="detailData.accessIpRangeList && detailData.accessIpRangeList.length > 0 && detailData.accessIpRangeList[0].startIp">
+              v-if="detailData.accessIpRangeList && detailData.accessIpRangeList.length > 0 && detailData.accessIpRangeList[0] && detailData.accessIpRangeList[0].startIp">
               <div v-for="(ipRange, index) in detailData.accessIpRangeList" :key="index" class="detail-text"
                 style="margin-bottom: 8px;">
                 {{ ipRange.ipVersion }} {{ ipRange.startIp || '-' }} — {{ ipRange.endIp || '-' }}
@@ -102,7 +102,6 @@
 
 <script setup lang="ts">
 import { ref, watch, reactive } from 'vue'
-import dayjs from 'dayjs'
 
 interface IpRangeItem {
   ipVersion: string

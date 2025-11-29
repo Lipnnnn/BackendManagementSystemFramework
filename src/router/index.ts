@@ -1,8 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import AboutView from '../views/AboutView.vue'
-import VideoView from '../views/VideoView.vue'
-import UploadView from '../views/UploadView.vue'
-import SettingsView from '../views/SettingsView.vue'
 
 // 路由配置，同时包含菜单信息
 export const routes = [

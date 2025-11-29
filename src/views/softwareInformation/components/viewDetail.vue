@@ -78,7 +78,6 @@
 
 <script setup lang="ts">
 import { ref, watch, reactive } from 'vue'
-import dayjs from 'dayjs'
 
 interface IpPortItem {
   ip: string

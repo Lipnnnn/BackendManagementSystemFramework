@@ -94,9 +94,6 @@
 import { ref, reactive, watch } from 'vue'
 import { DeleteOutlined } from '@ant-design/icons-vue'
 import { _areaData } from '@/data/areaData'
-import dayjs from 'dayjs'
-import 'dayjs/locale/zh-cn'
-import locale from 'ant-design-vue/es/date-picker/locale/zh_CN'
 
 interface IpPortItem {
   ip: string

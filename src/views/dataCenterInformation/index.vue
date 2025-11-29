@@ -24,7 +24,7 @@
         <a-tab-pane key="room" tab="机房信息">
           <a-table :columns="columns" :data-source="displayData" :row-selection="rowSelection" :pagination="pagination"
             :scroll="{ x: 1200 }" @change="handleTableChange">
-            <template #bodyCell="{ column, record, index }">
+            <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'action'">
                 <a-space>
                   <a-button type="link" @click="handleView(record)">查看</a-button>
@@ -40,7 +40,7 @@
         <a-tab-pane key="cloud" tab="云平台信息">
           <a-table :columns="cloudColumns" :data-source="displayCloudData" :row-selection="cloudRowSelection"
             :pagination="cloudPagination" :scroll="{ x: 1200 }" @change="handleCloudTableChange">
-            <template #bodyCell="{ column, record, index }">
+            <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'isDomestic'">
                 {{ record.isDomestic ? '是' : '否' }}
               </template>

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import type { CSSProperties } from 'vue';
 import HeaderCom from './components/HeaderCom.vue';
 import SiderMenu from './components/SiderMenu.vue';
 import { RouterView } from 'vue-router';

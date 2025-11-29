@@ -92,7 +92,7 @@
         <a-col :span="12">
           <a-form-item label="MAC地址" name="macAddress">
             <a-button @click="addMacAddress" style="margin-bottom: 8px;">添加MAC地址</a-button>
-            <div v-for="(mac, index) in formData.macAddressList" :key="index"
+            <div v-for="(_mac, index) in formData.macAddressList" :key="index"
               style="margin-bottom: 8px; display: flex; gap: 8px;">
               <a-input v-model:value="formData.macAddressList[index]" placeholder="请输入MAC地址" />
               <a-button danger @click="removeMacAddress(index)" style="flex-shrink: 0;">
@@ -186,7 +186,6 @@
 import { ref, reactive, watch } from 'vue'
 import { DeleteOutlined } from '@ant-design/icons-vue'
 import { _areaData } from '@/data/areaData'
-import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN'
 

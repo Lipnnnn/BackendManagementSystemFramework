@@ -21,7 +21,7 @@
     <div class="table-section">
       <a-table :columns="columns" :data-source="displayData" :row-selection="rowSelection" :pagination="pagination"
         :scroll="{ x: 1200 }" @change="handleTableChange">
-        <template #bodyCell="{ column, record, index }">
+        <template #bodyCell="{ column, record }">
           <template v-if="column.key === 'action'">
             <a-space>
               <a-button type="link" @click="handleView(record)">查看</a-button>
@@ -386,7 +386,6 @@ const handleModalCancel = () => {
 }
 
 :deep(.ant-pagination) {
-  margin-top: 16px;
-  text-align: right;
+  margin-top: 16px;  text-align: right;
 }
 </style>

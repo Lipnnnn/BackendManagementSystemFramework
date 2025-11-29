@@ -24,7 +24,7 @@
         <a-tab-pane key="network" tab="网络信息">
           <a-table :columns="columns" :data-source="displayData" :row-selection="rowSelection" :pagination="pagination"
             :scroll="{ x: 1200 }" @change="handleTableChange">
-            <template #bodyCell="{ column, record, index }">
+            <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'region'">
                 {{ Array.isArray(record.region) ? record.region.join(' / ') : (record.region || '-') }}
               </template>
@@ -43,7 +43,7 @@
         <a-tab-pane key="port" tab="端口信息">
           <a-table :columns="portColumns" :data-source="displayPortData" :row-selection="portRowSelection"
             :pagination="portPagination" :scroll="{ x: 1200 }" @change="handlePortTableChange">
-            <template #bodyCell="{ column, record, index }">
+            <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'ipAddress'">
                 {{ record.ipVersion || 'IPv4' }} {{ record.ipAddress || '-' }}
               </template>

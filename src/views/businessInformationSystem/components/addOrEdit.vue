@@ -89,7 +89,7 @@
         <a-col :span="12">
           <a-form-item label="系统域名" name="systemDomain">
             <a-button @click="addSystemDomain" style="margin-bottom: 8px;">添加域名</a-button>
-            <div v-for="(domain, index) in formData.systemDomainList" :key="index"
+            <div v-for="(_domain, index) in formData.systemDomainList" :key="index"
               style="margin-bottom: 8px; display: flex; gap: 8px;">
               <a-input v-model:value="formData.systemDomainList[index]" placeholder="请输入域名" />
               <a-button danger @click="removeSystemDomain(index)" style="flex-shrink: 0;">
@@ -103,7 +103,7 @@
         <a-col :span="12">
           <a-form-item label="系统使用url" name="systemUrl">
             <a-button @click="addSystemUrl" style="margin-bottom: 8px;">添加URL</a-button>
-            <div v-for="(url, index) in formData.systemUrlList" :key="index"
+            <div v-for="(_url, index) in formData.systemUrlList" :key="index"
               style="margin-bottom: 8px; display: flex; gap: 8px;">
               <a-input v-model:value="formData.systemUrlList[index]" placeholder="请输入url" />
               <a-button danger @click="removeSystemUrl(index)" style="flex-shrink: 0;">
@@ -136,7 +136,7 @@
         <a-col :span="12">
           <a-form-item label="dns服务器域名" name="dnsServerDomain">
             <a-button @click="addDnsServerDomain" style="margin-bottom: 8px;">添加域名</a-button>
-            <div v-for="(domain, index) in formData.dnsServerDomainList" :key="index"
+            <div v-for="(_domain, index) in formData.dnsServerDomainList" :key="index"
               style="margin-bottom: 8px; display: flex; gap: 8px;">
               <a-input v-model:value="formData.dnsServerDomainList[index]" placeholder="请输入dns域名" />
               <a-button danger @click="removeDnsServerDomain(index)" style="flex-shrink: 0;">
@@ -319,7 +319,7 @@ import { ref, reactive, watch } from 'vue'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import type { UploadProps } from 'ant-design-vue'
-import dayjs, { Dayjs } from 'dayjs'
+import { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN'
 
