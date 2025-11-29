@@ -55,6 +55,16 @@ export const routes = [
       icon: 'UserOutlined',
       hidden: false
     }
+  },
+  {
+    path: '/dataCenterInformation',
+    name: 'dataCenterInformation',
+    component: () => import('@/views/dataCenterInformation/index.vue'),
+    meta: {
+      title: '机房信息',
+      icon: 'UserOutlined',
+      hidden: false
+    }
   }
 ]
 
