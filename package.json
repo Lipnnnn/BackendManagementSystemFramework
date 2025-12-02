@@ -8,15 +8,8 @@
   "description": "网络安全协调指挥平台-资产填报工具",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build && electron-builder",
+    "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "electron:dev": "vite",
-    "electron:build": "vue-tsc -b && vite build && electron-builder",
-    "electron:pack": "vue-tsc -b && vite build && electron-packager . --platform=win32 --arch=x64 --out=release --overwrite --icon=public/favicon.ico --ignore=\"^/(node_modules|src|public|\\.(git|vscode)|tsconfig|vite\\.config|uno\\.config|pnpm-lock|README)\"",
-    "build:lite": "vue-tsc -b && vite build && pkg server.js -t node18-win-x64 -o release-lite/资产填报工具.exe && xcopy /E /I /Y dist release-lite\\dist",
-    "build:mini": "vue-tsc -b && vite build && if exist release-mini rmdir /s /q release-mini && mkdir release-mini && xcopy /E /I /Y dist release-mini\\dist && copy server.js release-mini\\ && copy 启动工具.bat release-mini\\",
-    "build:tiny": "vue-tsc -b && vite build && node scripts/build-tiny.cjs",
-    "build:single": "vue-tsc -b && vite build && node scripts/build-single-exe.cjs",
     "build:go": "vue-tsc -b && vite build && go build -ldflags=\"-s -w -H windowsgui\" -trimpath -o release-go/资产填报工具.exe server.go"
   },
   "dependencies": {
