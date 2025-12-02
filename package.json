@@ -10,7 +10,7 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
-    "build:go": "vue-tsc -b && vite build && go build -ldflags=\"-s -w -H windowsgui\" -trimpath -o release-go/资产填报工具.exe server.go"
+    "build:go": "vue-tsc -b && vite build && go-winres simply --icon winres\\icon.ico --manifest gui && go build -ldflags=\"-s -w -H windowsgui\" -o release-go/资产填报工具.exe ."
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
