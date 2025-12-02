@@ -28,12 +28,25 @@
         </a-col>
         <a-col :span="12">
           <a-form-item label="应急资源类型" name="resourceType" :rules="[{ required: true, message: '请选择应急资源类型' }]">
-            <a-select v-model:value="formData.resourceType" placeholder="请选择应急资源类型" allow-clear>
+            <a-select v-model:value="formData.resourceType" mode="multiple" placeholder="请选择应急资源类型" allow-clear>
               <a-select-option value="网络安全专家">网络安全专家</a-select-option>
               <a-select-option value="应急团队">应急团队</a-select-option>
               <a-select-option value="关键信息基础设施应急相应人">关键信息基础设施应急相应人</a-select-option>
               <a-select-option value="系统工具">系统工具</a-select-option>
             </a-select>
+          </a-form-item>
+        </a-col>
+      </a-row>
+
+      <a-row :gutter="16">
+        <a-col :span="12" v-if="formData.resourceType && formData.resourceType.includes('应急团队')">
+          <a-form-item label="团队规模" name="teamSize">
+            <a-input v-model:value="formData.teamSize" placeholder="请输入团队规模" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="12" v-if="formData.resourceType && formData.resourceType.includes('系统工具')">
+          <a-form-item label="系统工具列表" name="systemToolList">
+            <a-input v-model:value="formData.systemToolList" placeholder="请输入系统工具列表" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -104,7 +117,9 @@ interface FormData {
   resourceName: string
   resourceAvailability: string | null
   ownerUnit: string
-  resourceType: string | null
+  resourceType: string[]
+  teamSize?: string
+  systemToolList?: string
   emergencyContact: string
   emergencyContactPhone: string
   emergencyContactEmail: string
@@ -141,7 +156,9 @@ const formData = reactive<FormData>({
   resourceName: '',
   resourceAvailability: null,
   ownerUnit: '',
-  resourceType: null,
+  resourceType: [],
+  teamSize: '',
+  systemToolList: '',
   emergencyContact: '',
   emergencyContactPhone: '',
   emergencyContactEmail: '',
@@ -180,7 +197,9 @@ const resetForm = () => {
     resourceName: '',
     resourceAvailability: null,
     ownerUnit: '',
-    resourceType: null,
+    resourceType: [],
+    teamSize: '',
+    systemToolList: '',
     emergencyContact: '',
     emergencyContactPhone: '',
     emergencyContactEmail: '',

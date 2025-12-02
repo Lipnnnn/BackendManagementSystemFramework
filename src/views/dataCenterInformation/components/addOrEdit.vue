@@ -6,7 +6,7 @@
       <div class="form-section-title">基本信息</div>
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="机房名称" name="roomName" :rules="[{ required: true, message: '请输入机房信息' }]">
+          <a-form-item label="机房名称" name="roomName">
             <a-input v-model:value="formData.roomName" placeholder="请输入机房信息" />
           </a-form-item>
         </a-col>
@@ -33,10 +33,14 @@
 
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="经纬度" name="coordinates">
-            <a-space>
-              <a-input v-model:value="formData.longitude" placeholder="请输入经度" style="width: 120px;" />
-              <a-input v-model:value="formData.latitude" placeholder="请输入纬度" style="width: 120px;" />
+          <a-form-item label="经纬度" required>
+            <a-space direction="vertical" style="width: 100%;">
+              <a-form-item name="longitude" :rules="[{ required: true, message: '请输入经度' }]" style="margin-bottom: 0;">
+                <a-input v-model:value="formData.longitude" placeholder="请输入经度" />
+              </a-form-item>
+              <a-form-item name="latitude" :rules="[{ required: true, message: '请输入纬度' }]" style="margin-bottom: 0;">
+                <a-input v-model:value="formData.latitude" placeholder="请输入纬度" />
+              </a-form-item>
             </a-space>
           </a-form-item>
         </a-col>

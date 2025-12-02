@@ -24,7 +24,23 @@
         </a-col>
         <a-col :span="12">
           <a-form-item label="应急资源类型">
-            <span class="detail-text">{{ detailData.resourceType || '-' }}</span>
+            <span class="detail-text">{{ Array.isArray(detailData.resourceType) ? detailData.resourceType.join('、') :
+              (detailData.resourceType || '-') }}</span>
+          </a-form-item>
+        </a-col>
+      </a-row>
+
+      <a-row :gutter="16">
+        <a-col :span="12"
+          v-if="detailData.resourceType && (Array.isArray(detailData.resourceType) ? detailData.resourceType.includes('应急团队') : detailData.resourceType === '应急团队') && detailData.teamSize">
+          <a-form-item label="团队规模">
+            <span class="detail-text">{{ detailData.teamSize || '-' }}</span>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12"
+          v-if="detailData.resourceType && (Array.isArray(detailData.resourceType) ? detailData.resourceType.includes('系统工具') : detailData.resourceType === '系统工具') && detailData.systemToolList">
+          <a-form-item label="系统工具列表">
+            <span class="detail-text">{{ detailData.systemToolList || '-' }}</span>
           </a-form-item>
         </a-col>
       </a-row>
@@ -93,7 +109,9 @@ interface DetailData {
   resourceName?: string
   resourceAvailability?: string
   ownerUnit?: string
-  resourceType?: string
+  resourceType?: string | string[]
+  teamSize?: string
+  systemToolList?: string
   emergencyContact?: string
   emergencyContactPhone?: string
   emergencyContactEmail?: string

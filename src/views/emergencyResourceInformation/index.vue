@@ -22,6 +22,10 @@
       <a-table :columns="columns" :data-source="displayData" :row-selection="rowSelection" :pagination="pagination"
         :scroll="{ x: 1200 }" @change="handleTableChange">
         <template #bodyCell="{ column, record }">
+          <template v-if="column.key === 'resourceType'">
+            <span>{{ Array.isArray(record.resourceType) ? record.resourceType.join('、') : (record.resourceType || '-')
+              }}</span>
+          </template>
           <template v-if="column.key === 'action'">
             <a-space>
               <a-button type="link" @click="handleView(record)">查看</a-button>
@@ -59,9 +63,11 @@ import ViewDetail from './components/viewDetail.vue'
 interface OrganizationItem {
   key: string
   resourceName: string
-  resourceType: string
+  resourceType: string | string[]
   ownerUnit: string
   resourceAvailability: string
+  teamSize?: string
+  systemToolList?: string
   // 完整表单数据，用于编辑回显
   emergencyContact?: string
   emergencyContactPhone?: string
@@ -175,7 +181,9 @@ const handleExport = () => {
       '应急资源名称': item.resourceName || '-',
       '资源可用性': item.resourceAvailability || '-',
       '所属单位': item.ownerUnit || '-',
-      '应急资源类型': item.resourceType || '-',
+      '应急资源类型': Array.isArray(item.resourceType) ? item.resourceType.join('、') : (item.resourceType || '-'),
+      '团队规模': item.teamSize || '-',
+      '系统工具列表': item.systemToolList || '-',
       '应急联系人': item.emergencyContact || '-',
       '应急联系人电话': item.emergencyContactPhone || '-',
       '应急联系人邮箱': item.emergencyContactEmail || '-',
@@ -214,6 +222,8 @@ const handleView = (record: OrganizationItem) => {
     resourceAvailability: record.resourceAvailability,
     ownerUnit: record.ownerUnit,
     resourceType: record.resourceType,
+    teamSize: record.teamSize,
+    systemToolList: record.systemToolList,
     emergencyContact: record.emergencyContact,
     emergencyContactPhone: record.emergencyContactPhone,
     emergencyContactEmail: record.emergencyContactEmail,
@@ -234,6 +244,8 @@ const handleEdit = (record: OrganizationItem) => {
     resourceAvailability: record.resourceAvailability || '',
     ownerUnit: record.ownerUnit || '',
     resourceType: record.resourceType || '',
+    teamSize: record.teamSize || '',
+    systemToolList: record.systemToolList || '',
     emergencyContact: record.emergencyContact || '',
     emergencyContactPhone: record.emergencyContactPhone || '',
     emergencyContactEmail: record.emergencyContactEmail || '',
@@ -273,6 +285,8 @@ const handleModalOk = (data: any) => {
         resourceAvailability: data.resourceAvailability,
         ownerUnit: data.ownerUnit,
         resourceType: data.resourceType,
+        teamSize: data.teamSize,
+        systemToolList: data.systemToolList,
         // 保存完整表单数据
         emergencyContact: data.emergencyContact,
         emergencyContactPhone: data.emergencyContactPhone,
@@ -293,6 +307,8 @@ const handleModalOk = (data: any) => {
       resourceAvailability: data.resourceAvailability,
       ownerUnit: data.ownerUnit,
       resourceType: data.resourceType,
+      teamSize: data.teamSize,
+      systemToolList: data.systemToolList,
       // 保存完整表单数据
       emergencyContact: data.emergencyContact,
       emergencyContactPhone: data.emergencyContactPhone,

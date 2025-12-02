@@ -20,7 +20,7 @@
 
       <a-row :gutter="16">
         <a-col :span="12">
-          <a-form-item label="所属区域" name="region">
+          <a-form-item label="所属区域" name="region" :rules="[{ required: true, message: '请选择所属区域' }]">
             <a-cascader v-model:value="formData.region" :options="regionCascaderOptions" placeholder="请选择所属区域"
               :show-search="{ filter }" />
           </a-form-item>
