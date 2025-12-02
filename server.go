@@ -9,7 +9,9 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
+	"strings"
 	"sync/atomic"
 	"time"
 )
@@ -21,7 +23,7 @@ var distFiles embed.FS
 var lastAccessTime atomic.Value
 
 func main() {
-	port := "5173"
+	port := "8000"
 	url := fmt.Sprintf("http://localhost:%s", port)
 
 	// 检查端口是否已被占用
@@ -37,12 +39,42 @@ func main() {
 		log.Fatal("无法加载静态资源:", err)
 	}
 
-	// 设置静态文件服务（带访问记录）
-	fileServer := http.FileServer(http.FS(distFS))
+	// 设置静态文件服务（带访问记录和禁用缓存）
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// 更新最后访问时间
 		lastAccessTime.Store(time.Now())
-		fileServer.ServeHTTP(w, r)
+		
+		// SPA路由支持：检查请求的文件是否存在
+		path := r.URL.Path
+		if path == "/" {
+			path = "index.html"
+		} else {
+			path = path[1:] // 移除开头的 /
+		}
+		
+		// 尝试打开文件
+		if _, err := fs.Stat(distFS, path); err != nil {
+			// 文件不存在，返回 index.html（用于SPA路由）
+			path = "index.html"
+		}
+		
+		// 读取文件内容
+		data, err := fs.ReadFile(distFS, path)
+		if err != nil {
+			http.Error(w, "File not found", http.StatusNotFound)
+			return
+		}
+		
+		// 设置Content-Type（必须在写入数据之前）
+		contentType := getContentType(path)
+		w.Header().Set("Content-Type", contentType)
+		
+		// 设置禁用缓存的响应头
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+		
+		w.Write(data)
 	})
 
 	fmt.Println("========================================")
@@ -92,6 +124,31 @@ func isPortInUse(port string) bool {
 	}
 	ln.Close()
 	return false
+}
+
+// 根据文件扩展名获取Content-Type
+func getContentType(path string) string {
+	ext := strings.ToLower(filepath.Ext(path))
+	switch ext {
+	case ".html":
+		return "text/html; charset=utf-8"
+	case ".css":
+		return "text/css; charset=utf-8"
+	case ".js":
+		return "application/javascript; charset=utf-8"
+	case ".json":
+		return "application/json; charset=utf-8"
+	case ".png":
+		return "image/png"
+	case ".jpg", ".jpeg":
+		return "image/jpeg"
+	case ".svg":
+		return "image/svg+xml"
+	case ".ico":
+		return "image/x-icon"
+	default:
+		return "application/octet-stream"
+	}
 }
 
 // 打开系统默认浏览器

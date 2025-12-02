@@ -21,7 +21,7 @@ export default defineConfig({
   // 构建配置
   build: {
     outDir: 'dist',
-    emptyOutDir: false,
+    emptyOutDir: true,
     // 优化配置，减少打包体积
     minify: 'esbuild',
     target: 'es2015',
