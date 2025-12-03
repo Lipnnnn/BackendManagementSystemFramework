@@ -193,8 +193,8 @@ const handleDelete = () => {
   const newData = allData.value.filter(item => !selectedRowKeys.value.includes(item.key))
   allData.value = newData
   pagination.total = newData.length
-  selectedRowKeys.value = []
   message.success(`成功删除 ${selectedRowKeys.value.length} 条数据`)
+  selectedRowKeys.value = []
 }
 
 // 导出
